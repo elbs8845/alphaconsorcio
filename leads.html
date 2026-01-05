@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Alpha | Leads</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin:0; background:#f3f4f6; }
+    .sidebar { width:220px; height:100vh; background:#111827; color:#fff; position:fixed; }
+    .sidebar h2 { text-align:center; padding:20px 0; }
+    .sidebar a { display:block; padding:12px 20px; color:#d1d5db; text-decoration:none; }
+    .sidebar a:hover { background:#1f2937; color:#fff; }
+    .container { margin-left:220px; padding:30px; }
+    input, button, table { margin:5px 0; }
+    table { width:100%; border-collapse:collapse; }
+    th, td { border:1px solid #ccc; padding:8px; }
+  </style>
+</head>
+<body>
+
+<div class="sidebar">
+  <h2>Alpha</h2>
+  <a href="dashboard.html">Dashboard</a>
+  <a href="leads.html">Leads</a>
+  <a href="usuarios.html">Usuários</a>
+  <a href="index.html">Sair</a>
+</div>
+
+<div class="container">
+  <h1>Leads</h1>
+
+  <input type="text" id="nomeLead" placeholder="Nome do Lead">
+  <input type="text" id="telefoneLead" placeholder="Telefone">
+  <button onclick="salvarLead()">Salvar Lead</button>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Nome</th>
+        <th>Telefone</th>
+      </tr>
+    </thead>
+    <tbody id="listaLeads"></tbody>
+  </table>
+</div>
+
+<script>
+  const usuario = JSON.parse(localStorage.getItem("usuarioLogado"));
+  if (!usuario) window.location.href = "index.html";
+
+  let leads = JSON.parse(localStorage.getItem("leads")) || [];
+
+  function salvarLead() {
+    const nome = document.getElementById("nomeLead").value;
+    const telefone = document.getElementById("telefoneLead").value;
+    if (!nome || !telefone) return alert("Preencha todos os campos");
+
+    leads.push({ nome, telefone, vendedor: usuario.login });
+    localStorage.setItem("leads", JSON.stringify(leads));
+    document.getElementById("nomeLead").value = "";
+    document.getElementById("telefoneLead").value = "";
+    listarLeads();
+  }
+
+  function listarLeads() {
+    const tbody = document.getElementById("listaLeads");
+    tbody.innerHTML = "";
+    leads.forEach(l => {
+      if (usuario.perfil === "administrador" || l.vendedor === usuario.login) {
+        tbody.innerHTML += `<tr><td>${l.nome}</td><td>${l.telefone}</td></tr>`;
+      }
+    });
+  }
+
+  listarLeads();
+</script>
+
+</body>
+</html>
