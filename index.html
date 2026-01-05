@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Alpha | Login</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background:#111827;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      height:100vh;
+    }
+    .login {
+      background:#fff;
+      padding:30px;
+      border-radius:10px;
+      width:300px;
+    }
+    input, button {
+      width:100%;
+      padding:10px;
+      margin:10px 0;
+    }
+    button {
+      background:#111827;
+      color:#fff;
+      border:none;
+      cursor:pointer;
+    }
+  </style>
+</head>
+<body>
+
+<div class="login">
+  <h2>Alpha</h2>
+  <input type="text" id="usuario" placeholder="Usuário">
+  <input type="password" id="senha" placeholder="Senha">
+  <button onclick="login()">Entrar</button>
+</div>
+
+<script>
+  function login() {
+    const login = document.getElementById("usuario").value;
+    const senha = document.getElementById("senha").value;
+
+    const usuarios = JSON.parse(localStorage.getItem("usuarios")) || [];
+
+    const usuario = usuarios.find(
+      u => u.login === login && u.senha === senha
+    );
+
+    if (!usuario) {
+      alert("Usuário ou senha inválidos");
+      return;
+    }
+
+    localStorage.setItem("usuarioLogado", JSON.stringify(usuario));
+    window.location.href = "dashboard.html";
+  }
+</script>
+
+</body>
+</html>
